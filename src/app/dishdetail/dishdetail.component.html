@@ -41,19 +41,18 @@
             <p>
                 <mat-form-field class="half-width">
                     <input matInput formControlName="name" placeholder="Name" type="text" style="width: 40em;">
-                    <!-- <mat-error *ngIf="formErrors.lastname">{{ formErrors.lastname }}</mat-error> -->
+                    <mat-error *ngIf="formErrors.name">{{ formErrors.name }}</mat-error>
                 </mat-form-field>
             </p>
             <p>
                 <mat-slider thumbLabel="true" tickInterval="1" class="example-margin" formControlName="rating" max="5" min="1" step="1" style="width: 10em;">
-                    <!-- <mat-error *ngIf="formErrors.lastname">{{ formErrors.lastname }}</mat-error> -->
+                    <mat-error *ngIf="formErrors.rating">{{ formErrors.rating }}</mat-error>
                 </mat-slider>
             </p>
             <p>
                 <mat-form-field class="half-width">
                     <textarea matInput formControlName="comment" placeholder="Your comment" type="text"></textarea>
-
-                    <!-- <mat-error *ngIf="formErrors.lastname">{{ formErrors.lastname }}</mat-error> -->
+                    <mat-error *ngIf="formErrors.comment">{{ formErrors.comment }}</mat-error>
                 </mat-form-field>
             </p>
             <button type="submit" mat-button class="background-primary text-floral-white">Submit</button>

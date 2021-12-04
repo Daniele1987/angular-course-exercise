@@ -16,8 +16,9 @@ export class DishdetailComponent implements OnInit {
   dishIds: string[];
   prev: string;
   next: string;
-  commentForm: FormGroup;  
-  @ViewChild('fform') feedbackFormDirective;
+  commentForm: FormGroup; 
+  comment: Comment; 
+  @ViewChild('fform') commentFormDirective;
   
   // this particular form validation pattern is prescribed in the angular.io website documentation
   formErrors = {
@@ -63,18 +64,6 @@ export class DishdetailComponent implements OnInit {
       });
   }
 
-  setPrevNext(dishId: string) {
-    const index = this.dishIds.indexOf(dishId);
-    this.prev =
-      this.dishIds[(this.dishIds.length + index - 1) % this.dishIds.length];
-    this.next =
-      this.dishIds[(this.dishIds.length + index + 1) % this.dishIds.length];
-  }
-
-  goBack(): void {
-    this.location.back();
-  }
-
   createForm() {
     this.commentForm = this.fb.group({
       name: [
@@ -90,13 +79,48 @@ export class DishdetailComponent implements OnInit {
     });
 
     this.commentForm.valueChanges.subscribe((data) =>
-      console.log("feedback FORM: ", data)
+    {this.onValueChanged(data);
+      console.log("feedback FORM: ", data)}
     );
+    this.onValueChanged();
   }
 
+  onValueChanged(data?: any){
+    if (!this.commentForm){ return; };
+    const form= this.commentForm;
+    for (const field in this.formErrors){
+      if (this.formErrors.hasOwnProperty(field)){
+        // clear previous error message (if any)
+        this.formErrors[field]= '';
+        const control = form.get(field);
+        if (control && control.dirty && !control.valid) {
+          const messages = this.validationMessages[field];
+          for (const key in control.errors){
+            if (control.errors.hasOwnProperty(key)){
+              this.formErrors[field] += messages[key] + ' ';
+            }
+          }
+        }
+      }
+    }
+  }
+
+  setPrevNext(dishId: string) {
+    const index = this.dishIds.indexOf(dishId);
+    this.prev =
+      this.dishIds[(this.dishIds.length + index - 1) % this.dishIds.length];
+    this.next =
+      this.dishIds[(this.dishIds.length + index + 1) % this.dishIds.length];
+  }
+
+  goBack(): void {
+    this.location.back();
+  }
+
+
   onSubmit() {
-  //   this.comment = this.commentForm.value;
-  //   console.log(this.feedback);
+    this.comment = this.commentForm.value;
+    console.log(this.comment);
     // reset()
     // You can reset to a specific form state by passing in a map of states
     // that matches the structure of your form. The state can be a standalone value 
@@ -106,7 +130,7 @@ export class DishdetailComponent implements OnInit {
       rating: 0,
       comment: ''
     });
-    // this.commentFormDirective.resetForm();
+    this.commentFormDirective.resetForm();
   }
 
 }
