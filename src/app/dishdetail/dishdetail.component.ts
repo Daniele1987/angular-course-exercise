@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { Params, ActivatedRoute } from "@angular/router";
 import { Location } from "@angular/common";
 import { Dish } from "../shared/dish";
+import { Comment } from "../shared/comment";
 import { DishService } from "../services/dish.service";
 import { switchMap } from "rxjs/operators";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
@@ -22,13 +23,13 @@ export class DishdetailComponent implements OnInit {
   
   // this particular form validation pattern is prescribed in the angular.io website documentation
   formErrors = {
-    'name': '',
+    'author': '',
     'rating': '',
     'comment': ''
   };
 
   validationMessages = {
-    'name': {
+    'author': {
       'required': 'Author name is required',
       'minlength': 'First name must be at least 2 characters long'
     },
@@ -66,7 +67,7 @@ export class DishdetailComponent implements OnInit {
 
   createForm() {
     this.commentForm = this.fb.group({
-      name: [
+      author: [
         "",
         [
           Validators.required,
@@ -74,7 +75,7 @@ export class DishdetailComponent implements OnInit {
           Validators.maxLength(25),
         ],
       ],
-      rating: [0, [Validators.required]],
+      rating: [1, [Validators.required]],
       comment: ["", [Validators.required]],
     });
 
@@ -120,14 +121,16 @@ export class DishdetailComponent implements OnInit {
 
   onSubmit() {
     this.comment = this.commentForm.value;
+    this.comment.date= new Date().toString();
     console.log(this.comment);
+    this.dish.comments.push(this.comment);
     // reset()
     // You can reset to a specific form state by passing in a map of states
     // that matches the structure of your form. The state can be a standalone value 
     // or a form state object with both a value and a disabled status.
     this.commentForm.reset({
-      name: '',
-      rating: 0,
+      author: '',
+      rating: 1,
       comment: ''
     });
     this.commentFormDirective.resetForm();
